@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="DOTDBTicketLifetimeCube" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="DOTDBTicketLifetimeCube"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="com.sap::DOTRESOURCES">
+    <resourceUri>com.sap::DOTRESOURCES</resourceUri>
+  </DataSource>
+  <DataSource id="com.sap::TICKETLOG">
+    <resourceUri>com.sap::TICKETLOG</resourceUri>
+  </DataSource>
+  <DataSource id="com.sap::TICKETDOTRESOURCE">
+    <resourceUri>com.sap::TICKETDOTRESOURCE</resourceUri>
+  </DataSource>
+  <DataSource id="Projection_6$$$$com.sap::TICKETLOG$$">
+    <resourceUri>com.sap::TICKETLOG</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="ResourceID"/>
+      <viewAttribute id="Name"/>
+      <viewAttribute id="FirstName"/>
+      <viewAttribute id="DOTContact"/>
+      <viewAttribute id="ContactType"/>
+      <viewAttribute id="Email"/>
+      <viewAttribute id="Available"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::DOTRESOURCES"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="TicketID"/>
+      <viewAttribute id="EventDT"/>
+      <viewAttribute id="Status"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::TICKETLOG"/>
+    <filter>&quot;Status&quot;='OPEN'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="TicketID" aggregationType="sum"/>
+      <viewAttribute id="ResourceID" aggregationType="sum"/>
+      <viewAttribute id="EventDT" aggregationType="min"/>
+      <viewAttribute id="Status"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="OpenDate" datatype="TIMESTAMP" expressionLanguage="SQL">
+        <formula>&quot;EventDT&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ResourceID" source="ResourceID"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EventDT" source="EventDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+    </input>
+    <joinAttribute name="TicketID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="TicketID"/>
+      <viewAttribute id="ResourceID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::TICKETDOTRESOURCE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="TicketID"/>
+      <viewAttribute id="EventDT"/>
+      <viewAttribute id="Status"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_6$$$$com.sap::TICKETLOG$$"/>
+    <filter>&quot;Status&quot;='CLOSED'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="TicketID" aggregationType="sum"/>
+      <viewAttribute id="ResourceID" aggregationType="sum"/>
+      <viewAttribute id="OpenDate"/>
+    
+      <viewAttribute id="EventDT" aggregationType="min"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ClosedDate" datatype="TIMESTAMP" expressionLanguage="SQL">
+        <formula>&quot;EventDT&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ResourceID" source="ResourceID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenDate" source="OpenDate"/>
+    </input>
+    <input node="Projection_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EventDT" source="EventDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+    </input>
+    <joinAttribute name="TicketID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="TicketID" aggregationType="sum"/>
+      <viewAttribute id="ResourceID" aggregationType="sum"/>
+      <viewAttribute id="OpenDate"/>
+      <viewAttribute id="ClosedDate"/>
+      <viewAttribute id="Name"/>
+      <viewAttribute id="FirstName"/>
+      <viewAttribute id="DOTContact" aggregationType="sum"/>
+      <viewAttribute id="ContactType"/>
+      <viewAttribute id="Email"/>
+      <viewAttribute id="Available"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="DiffInHours" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>DAYS_BETWEEN(&quot;OpenDate&quot;,&quot;ClosedDate&quot;) * 24</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ResourceID" source="ResourceID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenDate" source="OpenDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ClosedDate" source="ClosedDate"/>
+    </input>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Name" source="Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FirstName" source="FirstName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOTContact" source="DOTContact"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ContactType" source="ContactType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Email" source="Email"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Available" source="Available"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ResourceID" source="ResourceID"/>
+    </input>
+    <joinAttribute name="ResourceID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_3">
+  <attributes>
+    <attribute id="TicketID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TicketID"/>
+      <keyMapping columnObjectName="Join_3" columnName="TicketID"/>
+    </attribute>
+    <attribute id="Name" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Name"/>
+      <keyMapping columnObjectName="Join_3" columnName="Name"/>
+    </attribute>
+    <attribute id="FirstName" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FirstName"/>
+      <keyMapping columnObjectName="Join_3" columnName="FirstName"/>
+    </attribute>
+    <attribute id="ContactType" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ContactType"/>
+      <keyMapping columnObjectName="Join_3" columnName="ContactType"/>
+    </attribute>
+    <attribute id="Email" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Email"/>
+      <keyMapping columnObjectName="Join_3" columnName="Email"/>
+    </attribute>
+    <attribute id="Available" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Available"/>
+      <keyMapping columnObjectName="Join_3" columnName="Available"/>
+    </attribute>
+    <attribute id="OpenDate" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OpenDate"/>
+      <keyMapping columnObjectName="Join_3" columnName="OpenDate"/>
+    </attribute>
+    <attribute id="ClosedDate" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ClosedDate"/>
+      <keyMapping columnObjectName="Join_3" columnName="ClosedDate"/>
+    </attribute>
+    <attribute id="DOTContact" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DOTContact"/>
+      <keyMapping columnObjectName="Join_3" columnName="DOTContact"/>
+    </attribute>
+    <attribute id="ResourceID" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ResourceID"/>
+      <keyMapping columnObjectName="Join_3" columnName="ResourceID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="DiffInHours" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="DiffInHours"/>
+      <measureMapping columnObjectName="Join_3" columnName="DiffInHours"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="422" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="489" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="500"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="144"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="384" y="496"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="145" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="144"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="422" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="144"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="147"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

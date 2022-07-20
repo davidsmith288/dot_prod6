@@ -1,0 +1,24 @@
+
+
+
+{
+    "dot_prod6_CC_ACCESS": {
+      "object_owner": {
+       
+        "global_roles" : [
+          {
+            "roles" : [ "genericRoleForOO"]
+          }
+        ]
+      },
+      "application_user": {
+           "global_roles" : [
+          {
+            "roles" : [ "genericRoleForAP"]
+          }
+        ]
+      }
+    }
+  }
+  
+  

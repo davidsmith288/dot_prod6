@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="DOTDBTicketSubjectsCube" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="DOTDBTicketSubjectsCube"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="com.sap::PRODUCTSTHESAURUS">
+    <resourceUri>com.sap::PRODUCTSTHESAURUS</resourceUri>
+  </DataSource>
+  <DataSource id="com.sap::THESAURUS">
+    <resourceUri>com.sap::THESAURUS</resourceUri>
+  </DataSource>
+  <DataSource id="com.sap::PRODUCTS">
+    <resourceUri>com.sap::PRODUCTS</resourceUri>
+  </DataSource>
+  <DataSource id="com.sap::TICKETTHESAURUS">
+    <resourceUri>com.sap::TICKETTHESAURUS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="ProductID"/>
+      <viewAttribute id="TermID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::PRODUCTSTHESAURUS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="TermID"/>
+      <viewAttribute id="Term"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::THESAURUS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="ProductID"/>
+      <viewAttribute id="UsualName"/>
+      <viewAttribute id="MarketPillar"/>
+      <viewAttribute id="ProductType"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::PRODUCTS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <viewAttributes>
+      <viewAttribute id="TicketID"/>
+      <viewAttribute id="TermID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.sap::TICKETTHESAURUS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="ProductID" aggregationType="sum"/>
+      <viewAttribute id="TermID" aggregationType="sum"/>
+      <viewAttribute id="Term"/>
+      <viewAttribute id="UsualName"/>
+      <viewAttribute id="MarketPillar"/>
+      <viewAttribute id="ProductType"/>
+      <viewAttribute id="TicketID" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductID" source="ProductID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TermID" source="TermID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Term" source="Term"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UsualName" source="UsualName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MarketPillar" source="MarketPillar"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductType" source="ProductType"/>
+    </input>
+    <input node="Projection_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TicketID" source="TicketID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TermID" source="TermID"/>
+    </input>
+    <joinAttribute name="TermID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="ProductID" aggregationType="sum"/>
+      <viewAttribute id="TermID" aggregationType="sum"/>
+      <viewAttribute id="UsualName"/>
+      <viewAttribute id="MarketPillar"/>
+      <viewAttribute id="ProductType"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductID" source="ProductID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TermID" source="TermID"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="UsualName" source="UsualName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MarketPillar" source="MarketPillar"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductType" source="ProductType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductID" source="ProductID"/>
+    </input>
+    <joinAttribute name="ProductID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="ProductID" aggregationType="sum"/>
+      <viewAttribute id="TermID" aggregationType="sum"/>
+      <viewAttribute id="Term"/>
+      <viewAttribute id="UsualName"/>
+      <viewAttribute id="MarketPillar"/>
+      <viewAttribute id="ProductType"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductID" source="ProductID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TermID" source="TermID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UsualName" source="UsualName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MarketPillar" source="MarketPillar"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ProductType" source="ProductType"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Term" source="Term"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TermID" source="TermID"/>
+    </input>
+    <joinAttribute name="TermID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="ProductID" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ProductID"/>
+      <keyMapping columnObjectName="Join_2" columnName="ProductID"/>
+    </attribute>
+    <attribute id="TermID" order="2" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TermID"/>
+      <keyMapping columnObjectName="Join_2" columnName="TermID"/>
+    </attribute>
+    <attribute id="Term" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Term"/>
+      <keyMapping columnObjectName="Join_2" columnName="Term"/>
+    </attribute>
+    <attribute id="UsualName" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UsualName"/>
+      <keyMapping columnObjectName="Join_2" columnName="UsualName"/>
+    </attribute>
+    <attribute id="MarketPillar" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MarketPillar"/>
+      <keyMapping columnObjectName="Join_2" columnName="MarketPillar"/>
+    </attribute>
+    <attribute id="ProductType" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ProductType"/>
+      <keyMapping columnObjectName="Join_2" columnName="ProductType"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TicketID" order="7" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="TicketID"/>
+      <measureMapping columnObjectName="Join_2" columnName="TicketID"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="475" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="511"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="511"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="511"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="521" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="475" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  
+    
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="588" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="289" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="87" y="175"/>
+      <rectangleSize width="147"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

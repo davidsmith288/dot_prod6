@@ -1,0 +1,50 @@
+{
+  "com.sap::TICKETS": {
+    "target": {
+      "object": "Tickets",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::TICKETLOG": {
+    "target": {
+      "object": "TicketLog",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::DOTRESOURCES": {
+    "target": {
+      "object": "DOTResources",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::TICKETDOTRESOURCE": {
+    "target": {
+      "object": "TicketDOTResource",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::PRODUCTS": {
+    "target": {
+      "object": "Products",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::THESAURUS": {
+    "target": {
+      "object": "Thesaurus",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::TICKETTHESAURUS": {
+    "target": {
+      "object": "TicketThesaurus",
+      "schema": "DBADMIN"
+    }
+  },
+  "com.sap::PRODUCTSTHESAURUS": {
+    "target": {
+      "object": "ProductsThesaurus",
+      "schema": "DBADMIN"
+    }
+  }
+}
