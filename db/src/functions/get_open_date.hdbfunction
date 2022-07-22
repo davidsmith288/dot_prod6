@@ -1,0 +1,25 @@
+FUNCTION "get_open_date"( )
+    RETURNS table (
+        "TICKETID" INTEGER,
+        "OPENDATE" TIMESTAMP
+    )
+    LANGUAGE SQLSCRIPT
+    SQL SECURITY INVOKER AS
+BEGIN
+    /*****************************
+        Write your function logic
+    ****************************/   
+    RETURN   
+        SELECT distinct
+            a."TicketID" AS TICKETID,
+            a."EventDT" AS OPENDATE    
+        FROM 
+            "TEMPTICKETLOG" a
+        WHERE 
+        --a."EventDT"=(select MIN("EventDT") from "TEMPTICKETLOG" b where a."TicketID" = b."TicketID") and 
+            "Status"='OPEN' 
+        order by 
+            a."TicketID";
+
+
+END;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TEMPTICKETLOG" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="TEMPTICKETLOG"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="com.sap::TICKETLOG">
+    <resourceUri>com.sap::TICKETLOG</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+
+<logicalModel id="com.sap::TICKETLOG" filterExpressionLanguage="SQL">
+  <attributes>
+    <attribute id="TicketID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TicketID"/>
+      <keyMapping columnObjectName="TICKETLOG" columnName="TicketID"/>
+    </attribute>
+    <attribute id="Status" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Status"/>
+      <keyMapping columnObjectName="TICKETLOG" columnName="Status"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="EventDT" order="2" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="EventDT"/>
+      <measureMapping columnObjectName="TICKETLOG" columnName="EventDT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+
+
+  <filter>&quot;Status&quot; IN('OPEN','CLOSED')</filter>
+
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  </shapes>
+</layout>
+</Calculation:scenario>

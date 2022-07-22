@@ -1,0 +1,25 @@
+FUNCTION "get_closed_date"( )
+RETURNS table (
+    "TICKETID" INTEGER,
+    "CLOSEDDATE" TIMESTAMP
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER AS
+BEGIN
+/*****************************
+    Write your function logic
+****************************/   
+RETURN   
+    SELECT
+        a."TicketID" AS TICKETID,
+        a."EventDT" AS CLOSEDDATE    
+    FROM 
+        "TEMPTICKETLOG" a
+    WHERE 
+    --    a."EventDT"=(select "EventDT" from "TEMPTICKETLOG" b where a."TicketID" = b."TicketID") and 
+        "Status"='CLOSED' 
+    order by 
+        a."TicketID";
+
+
+END;

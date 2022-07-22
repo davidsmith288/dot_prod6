@@ -16,11 +16,7 @@
       <viewAttribute id="EventDT"/>
       <viewAttribute id="Status"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="TicketCount" datatype="INTEGER" expressionLanguage="SQL">
-        <formula>1</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <input node="com.sap::TICKETLOG"/>
   </calculationView>
 </calculationViews>
@@ -37,22 +33,23 @@
     </attribute>
   </attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_MONTHNAMEFROMTIMESTAMP" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_MONTHNAMEFROMTIMESTAMP" order="4" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
         <formula>TO_NVARCHAR(MONTHNAME(&quot;EventDT&quot;))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="TicketCount" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </keyCalculation>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="EventDT" order="2" aggregationType="min" measureType="simple">
       <descriptions defaultDescription="EventDT"/>
       <measureMapping columnObjectName="Projection_1" columnName="EventDT"/>
-    </measure>
-    <measure id="TicketCount" order="4" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TicketCount"/>
-      <measureMapping columnObjectName="Projection_1" columnName="TicketCount"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
   <localDimensions/>
