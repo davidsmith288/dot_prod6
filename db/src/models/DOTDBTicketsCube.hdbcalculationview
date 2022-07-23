@@ -10,7 +10,7 @@
 </dataSources>
 <snapshotProcedures/>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="TicketID"/>
       <viewAttribute id="EventDT"/>
@@ -18,6 +18,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="com.sap::TICKETLOG"/>
+    <filter>&quot;Status&quot;='CLOSED'</filter>
   </calculationView>
 </calculationViews>
 
@@ -37,20 +38,24 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
         <formula>TO_NVARCHAR(MONTHNAME(&quot;EventDT&quot;))</formula>
       </keyCalculation>
-      </calculatedAttribute>
-  
-    <calculatedAttribute id="TicketCount" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <keyCalculation datatype="INTEGER" expressionLanguage="SQL">
-        <formula>1</formula>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_YearMonth" order="6" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>QUARTER(&quot;EventDT&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="EventDT" order="2" aggregationType="min" measureType="simple">
       <descriptions defaultDescription="EventDT"/>
       <measureMapping columnObjectName="Projection_1" columnName="EventDT"/>
     </measure></baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="TicketCount" order="5" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="SQL">
+      <formula>1</formula>
+    
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
